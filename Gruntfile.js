@@ -22,10 +22,12 @@ module.exports = function(grunt) {
         }
     },
 
+    clean: ['build'],
+
     concat: {
         dist: {
             files: {
-                'build/<%= pkg.name %>.js': ['app/**/*.module.js', 'app/**/*.js', '!app/**/*.spec.js', '!app/bower_components/**'],
+                // 'build/<%= pkg.name %>.js': ['app/**/*.module.js', 'app/**/*.js', '!app/**/*.spec.js', '!app/bower_components/**'],
                 'build/<%= pkg.name %>.css': ['app/**/*.css', '!app/bower_components/**']
             }
         }
@@ -36,7 +38,7 @@ module.exports = function(grunt) {
             files: [{
                 expand: true,
                 cwd: 'app/',
-                src: ['**/*.template.html', '**/*.json', '**/*.jpg'],
+                src: ['**/*.template.html', '**/*.json', '**/*.jpg', '!bower_components/**'],
                 dest: 'build/'
             }]
         },
@@ -61,6 +63,18 @@ module.exports = function(grunt) {
         },
     },
 
+    ts: {
+      default : {
+        src: ['app/**/*.module.{js,ts}', 'app/**/*.{js,ts}', '!app/**/*.spec.{js,ts}', '!app/bower_components/**'],
+        out: 'build/<%= pkg.name %>.js',
+        options: {
+            allowJs: true,
+            inlineSourceMap: true,
+            inlineSources: true
+        }
+      }
+    },
+
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -80,6 +94,6 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['uglify']);
 
   // Tasks
-  grunt.registerTask('dist', ['bower_concat', 'concat', 'copy', 'injector']);
+  grunt.registerTask('dist', ['clean', 'bower_concat', 'concat', 'ts', 'copy', 'injector']);
 
 };

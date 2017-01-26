@@ -8,3 +8,5 @@ angular-phonecat-snapshots
 bower_components/
 app/bower_components/
 build/
+.tscache/
+app/.baseDir.ts
